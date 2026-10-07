@@ -1,0 +1,74 @@
+Metadata-Version: 2.4
+Name: mars-evidence
+Version: 0.1.0
+Summary: Exploración reproducible de patrones visuales en imágenes públicas de Perseverance
+Requires-Python: <3.12,>=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: hdbscan
+Requires-Dist: jupyterlab
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: opencv-python
+Requires-Dist: pandas
+Requires-Dist: pillow
+Requires-Dist: pyyaml
+Requires-Dist: scikit-learn
+Requires-Dist: seaborn
+Requires-Dist: torch
+Requires-Dist: transformers
+Requires-Dist: umap-learn
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Provides-Extra: faiss
+Requires-Dist: faiss-cpu; extra == "faiss"
+Dynamic: license-file
+
+# MARS-EVIDENCE
+
+Proyecto educativo para explorar imágenes públicas del rover Perseverance y encontrar patrones visuales candidatos para revisión humana. El proyecto no detecta vida, fósiles, minerales ni descubrimientos científicos: `visual_anomaly_score` es una señal exploratoria, no una probabilidad ni evidencia científica.
+
+## Instalación
+
+Requiere Python 3.11. En macOS/Linux:
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+```
+
+En Windows PowerShell:
+
+```powershell
+py -3.11 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+```
+
+FAISS CPU es opcional: `pip install -e ".[dev,faiss]"`. La implementación obligatoria de similitud usa scikit-learn.
+
+## Uso
+
+1. Copia imágenes locales compatibles (`jpg`, `jpeg`, `png`, `tif`, `tiff`, `webp`) en `data/raw/`.
+2. Ejecuta `python scripts/build_manifest.py` para crear `data/metadata/observations.csv`.
+3. Abre `notebooks/01_mars_evidence_exploration.ipynb` y ejecuta las celdas. La celda de DINOv2 es la primera que descarga el modelo desde Hugging Face, únicamente cuando se ejecuta explícitamente.
+4. Para comprobar el entorno: `python scripts/validate_environment.py`.
+
+El manifiesto deja vacíos `product_id`, `sol`, `earth_date`, `camera`, `eye`, `source_url` y `credit` cuando no pueden inferirse localmente. Las URLs oficiales se podrán añadir posteriormente sin scraping ni una API inventada.
+
+## Reproducibilidad y límites
+
+La semilla por defecto es 42 y se detecta automáticamente CUDA, Apple Silicon MPS o CPU. No se versionan imágenes, modelos, embeddings ni gráficos generados. UMAP, HDBSCAN y la búsqueda de vecinos dependen del tamaño y calidad del conjunto. Las imágenes inusuales requieren revisión humana y contexto científico independiente.
+
+Fases futuras documentadas: PatchCore, visión estéreo y análisis químico. No forman parte de esta iteración.
+
+## Desarrollo
+
+```bash
+pytest
+ruff check .
+```

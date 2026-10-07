@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mars-evidence"
+version = "0.1.0"
+description = "Exploración reproducible de patrones visuales en imágenes públicas de Perseverance"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "hdbscan",
+  "jupyterlab",
+  "matplotlib",
+  "numpy",
+  "opencv-python",
+  "pandas",
+  "pillow",
+  "pyyaml",
+  "scikit-learn",
+  "seaborn",
+  "torch",
+  "transformers",
+  "umap-learn",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+faiss = ["faiss-cpu"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
